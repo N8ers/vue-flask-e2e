@@ -6,6 +6,12 @@
 ## Running Flask App
 
 ```py
-export FLASK_APP=hello
+export FLASK_APP=friend_app
 flask run
+```
+
+## Initialize the database
+
+```py
+flask init-db
 ```
