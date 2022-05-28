@@ -49,24 +49,32 @@ onMounted(async () => {
 <template>
   <div>
     <h1>Vue-Flask-e2e Test!!!</h1>
-    <div v-if="isLoading">Loading Data...</div>
-    <div v-else>Data: {{ helloMessage }}</div>
+    <div data-cy="data">
+      <div v-if="isLoading">Loading Data...</div>
+      <div v-else>Data: {{ helloMessage }}</div>
+    </div>
     <hr />
     <div>
-      <h3>What did the chicken say to the farmer?</h3>
       <button @click="getData">???</button>
-      <div v-if="dataResponse.length">{{ dataResponse }}</div>
+      <div v-if="dataResponse.length">
+        <ul v-for="data in dataResponse" :key="data.name">
+          <li>{{ data.name }}</li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <style>
+@import "@/assets/base.css";
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
 }
 </style>
