@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, Response
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)
 
 mock_data = [
     {"name": "value A"},
