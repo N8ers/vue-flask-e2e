@@ -4,13 +4,13 @@ import axios from "axios";
 
 const isLoading = ref(true);
 const helloMessage = ref("");
-const dataResponse = ref([]);
+const friends = ref([]);
 const baseUrl = "http://127.0.0.1:5000";
 
-const getData = async () => {
+const getFriends = async () => {
   const response = await axios({
     method: "GET",
-    url: "/data",
+    url: "/friend",
     baseURL: baseUrl,
     mode: "no-cors",
     headers: {
@@ -21,7 +21,7 @@ const getData = async () => {
   if (response.statusText !== "OK") {
     console.log("ERROR ", response);
   } else {
-    dataResponse.value = response.data.data;
+    friends.value = response.data;
   }
 };
 
@@ -55,10 +55,10 @@ onMounted(async () => {
     </div>
     <hr />
     <div>
-      <button @click="getData">???</button>
-      <div v-if="dataResponse.length">
-        <ul v-for="data in dataResponse" :key="data.name">
-          <li>{{ data.name }}</li>
+      <button @click="getFriends">Get Friends</button>
+      <div v-if="friends.length">
+        <ul v-for="friend in friends" :key="friend.name">
+          <li>{{ friend.name }}</li>
         </ul>
       </div>
     </div>
