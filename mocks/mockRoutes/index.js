@@ -2,4 +2,9 @@
 import helloMock from "./hello.mock.js";
 import friendMock from "./friend.mock.js";
 
-export { helloMock as hello, friendMock as friend };
+const mocks = {
+  helloMock,
+  friendMock,
+};
+
+export default mocks;
