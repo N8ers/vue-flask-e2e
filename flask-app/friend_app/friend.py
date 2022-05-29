@@ -28,11 +28,27 @@ def getFriends():
         friends_list = []
         try:
             for friend in friends:
-                friends_list.append({"name": friend["name"]})
+                friends_list.append({"id": friend["id"], "name": friend["name"]})
         except:
             print("json failed")
 
         db.commit()
         return json.dumps(friends_list)
+    except:
+        return "ERROR MAN"
+
+
+@bp.route("/<int:id>", methods=["GET"])
+def getFriend(id):
+    db = get_db()
+
+    print("id ", id)
+
+    try:
+        result = db.execute("SELECT * FROM friend WHERE id = ?", (id,))
+        friend = result.fetchone()
+        friend_data = [{"id": friend["id"], "name": friend["name"]}]
+        db.commit()
+        return json.dumps(friend_data)
     except:
         return "ERROR MAN"
