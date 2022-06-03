@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "flask-sqlalchemy-app"
+version = "0.1.0"
+description = ""
+authors = ["sheryak_n <nathanraysheryak@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Flask-SQLAlchemy = "^2.5.1"
+Flask = "^2.1.2"
+Flask-Cors = "^3.0.10"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
