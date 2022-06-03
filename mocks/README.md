@@ -10,4 +10,4 @@ This also means that the seed data must be kept up to date with any API changes 
 
 1. Make sure the database has been seeded with test data
 1. Start the flask API (it has a read me)
-1. Run `node confirmMocks.js`
+1. Run `npm run confirm`
