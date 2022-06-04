@@ -20,6 +20,10 @@ flask run
 
 - Upon adding SqlAlchemy, we have access to a class called `Model` that is a base we can use to declare models
 - After creating a class
+- Inserting data takes 3 steps
+  1. create a python object `new_user = User(username="Tsuki")`
+  1. add it to the session `db.session.add(new_user)`
+  1. commit it to the session `db.session.commit()`
 
 ## Poetry
 
