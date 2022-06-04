@@ -4,10 +4,15 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+file_path = os.path.abspath(os.getcwd()) + "/database.db"
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////temp/test.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + file_path
+
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 CORS(app)
 
 

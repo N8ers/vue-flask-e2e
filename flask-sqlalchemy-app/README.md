@@ -25,3 +25,11 @@ flask run
 
 - Enter shell `poetry shell`
 - Exit + Deactivate shell `exit`
+- Add package `poetry add flask`
+
+## Database & Migrations
+
+- Initialize db `flask db init` (creates a migrations folder)
+- Generate init migration `flask db migrate -m "Initial migration."`
+- Migrate up `flask db upgrade`
+- Migrate down `flask db downgrade`
