@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from marshmallow import Schema, fields, post_load, ValidationError
 
 file_path = os.path.abspath(os.getcwd()) + "/database.db"
 
@@ -16,6 +17,7 @@ migrate = Migrate(app, db)
 CORS(app)
 
 
+# Model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -23,6 +25,28 @@ class User(db.Model):
     # __repr__ - computes "offical" string representation of an object used for debugging
     def __repr__(self):
         return "<User %r>" % self.username
+
+
+# Custom validator
+def must_not_be_blank(data):
+    if not data:
+        raise ValidationError("Data not provided. Must not be an empty field.")
+
+
+# Schema
+class UserSchema(Schema):
+    id = fields.Integer()
+    username = fields.String(required=True, validate=must_not_be_blank)
+
+    # Deserialize
+    @post_load
+    def create_user(self, data, **kwargs):
+        return User(**data)
+
+
+# Instantiate schema
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
 
 
 @app.route("/allo")
@@ -33,24 +57,21 @@ def hello():
 @app.route("/user", methods=["GET"])
 def get_all_users():
     result = User.query.all()
-    users = []
-    for user in result:
-        users.append({"username": user.username, "id": user.id})
+    users = users_schema.dump(result)
     return jsonify(users)
 
 
 @app.route("/user/<int:id>", methods=["GET"])
 def get_user_by_id(id):
     result = User.query.filter_by(id=id).first()
-    user = {"username": result.username, "id": result.id}
+    user = user_schema.dump(result)
     return jsonify(user)
 
 
 @app.route("/user", methods=["POST"])
 def create_user():
-    data = request.get_json()
-    username = data["username"]
-    new_user = User(username=username)
+    new_user = user_schema.load(request.get_json())
+
     db.session.add(new_user)
     db.session.commit()
 

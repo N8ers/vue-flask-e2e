@@ -37,3 +37,21 @@ flask run
 - Generate init migration `flask db migrate -m "Initial migration."`
 - Migrate up `flask db upgrade`
 - Migrate down `flask db downgrade`
+
+## Marshmallow
+
+It can process incoming and outgoing data. It also works as a field validator.
+
+- Create a schema for a class with the `@post_load` decorator
+  ```py
+  class UserSchema(Schema):
+      username = fields.String()
+      @post_load
+      def create_user(self, data, **kwargs):
+          return User(**data)
+  ```
+- Instantiate the schema `user_schema = UserSchema()`
+- If you want to do things in bulk, you must instanciate a bulk schema `users_schema = UserSchema(many=True)`
+- Custom validation functions can be defined outside of the schema, then used on the field `username = fields.String(required=True, validation=username_validation_function)`
+- To serialize incoming data use the `load()` method `new_user = user_schema.load(request.get_json())`
+- To serialize outgoing data use the `dump()` method `users = user_schema.dump(result)`
