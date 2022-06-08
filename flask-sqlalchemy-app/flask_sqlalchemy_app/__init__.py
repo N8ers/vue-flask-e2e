@@ -1,86 +1,26 @@
 __version__ = "0.1.0"
 
 import os
-from flask import Flask, request, jsonify
+from flask import Flask
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from marshmallow import Schema, fields, post_load, ValidationError
+
+from .db import db, migrate
+
+from .blueprints.user import user_bp
 
 file_path = os.path.abspath(os.getcwd()) + "/database.db"
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + file_path
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+db.init_app(app)
+migrate.init_app(app, db)
 CORS(app)
 
-
-# Model
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-
-    # __repr__ - computes "offical" string representation of an object used for debugging
-    def __repr__(self):
-        return "<User %r>" % self.username
-
-
-# Custom validator
-def must_not_be_blank(data):
-    if not data:
-        raise ValidationError("Data not provided. Must not be an empty field.")
-
-
-# Schema
-class UserSchema(Schema):
-    id = fields.Integer()
-    username = fields.String(required=True, validate=must_not_be_blank)
-
-    # Deserialize
-    @post_load
-    def create_user(self, data, **kwargs):
-        return User(**data)
-
-
-# Instantiate schema
-user_schema = UserSchema()
-users_schema = UserSchema(many=True)
+# Blueprints
+app.register_blueprint(user_bp)
 
 
 @app.route("/allo")
 def hello():
     return "Hello World!"
-
-
-@app.route("/user", methods=["GET"])
-def get_all_users():
-    result = User.query.all()
-    users = users_schema.dump(result)
-    return jsonify(users)
-
-
-@app.route("/user/<int:id>", methods=["GET"])
-def get_user_by_id(id):
-    result = User.query.filter_by(id=id).first()
-    user = user_schema.dump(result)
-    return jsonify(user)
-
-
-@app.route("/user", methods=["POST"])
-def create_user():
-    new_user = user_schema.load(request.get_json())
-
-    db.session.add(new_user)
-    db.session.commit()
-
-    return "", 204
-
-
-@app.route("/user/<int:id>", methods=["DELETE"])
-def delete_user_by_id(id):
-    result = User.query.filter_by(id=id).first()
-    db.session.delete(result)
-    db.session.commit()
-    return "", 204
