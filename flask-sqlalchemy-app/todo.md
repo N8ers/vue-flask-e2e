@@ -7,7 +7,7 @@
 - [x] hook up endpoints to db
 - [x] wire up migration tool
 - [x] wire up schema tool (marshmallow)
+- [x] break project out into Blueprint, Schema, etc
 - [ ] learn how to test (py test or whatever we're using at work)
-- [ ] break project out into Blueprint, Schema, etc
 - [ ] create a Posts model, schema, blueprints, and relationship w/ Users
 - [ ] containerize app with Docker
